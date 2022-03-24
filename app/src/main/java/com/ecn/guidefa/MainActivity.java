@@ -7,6 +7,7 @@ import java.io.*;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     MapFragment mapFragment = new MapFragment();
     CvFragment cvFragment = new CvFragment();
     NotesFragment notesFragment = new NotesFragment();
+    CompanyDetailsFragment detailsFragment = new CompanyDetailsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
         }
         return false;
+    }
+
+    public boolean goToDetails(View v){
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, detailsFragment).commit();
+        return true;
+    }
+
+    public boolean goBackEntreprise(View v){
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, companyListFragment).commit();
+        return true;
     }
 
 }

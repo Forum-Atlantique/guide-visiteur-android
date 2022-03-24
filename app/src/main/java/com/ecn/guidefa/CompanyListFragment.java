@@ -61,4 +61,5 @@ public class CompanyListFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_company_list, container, false);
     }
+
 }
