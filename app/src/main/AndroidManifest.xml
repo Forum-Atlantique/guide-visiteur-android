@@ -9,9 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_fa_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GuideFA">
+        <!--
         <activity
             android:name=".CompanyList"
-            android:exported="false" />
+            android:label="@string/listeentreprises"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        <activity> -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
