@@ -1,13 +1,22 @@
 package com.ecn.guidefa;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.stream.Stream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +28,9 @@ public class CompanyListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    private EditText searchBar;
+    private String[][] dynamicList;
 
 
     public CompanyListFragment() {
@@ -44,34 +56,46 @@ public class CompanyListFragment extends Fragment {
         if (getArguments() != null) {
             // place args
         }
+        dynamicList = companyList.clone();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_company_list, container, false);
-
         View rootView = inflater.inflate(R.layout.fragment_company_list, container, false);
 
+        //Search
+        searchBar = rootView .findViewById(R.id.searchBar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String search = charSequence.toString().toLowerCase();
+                Stream<String[]> stream = (Stream<String[]>) Stream.of(companyList);
+                dynamicList = (String[][]) stream.filter(cmp -> cmp[0].toLowerCase().contains(search)).toArray(String[][]::new);
+                adapter = new CompanyListAdapter(dynamicList);
+                recyclerView.setAdapter(adapter);
+            }
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        // Recycler View
         recyclerView = (RecyclerView) rootView.findViewById(R.id.company_list_view);
-        // use this setting to
-        // improve performance if you know that changes
-        // in content do not change the layout size
-        // of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-        // use a grid layout manager
         layoutManager = new GridLayoutManager(rootView.getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         // retrieve data
-        adapter = new CompanyListAdapter(companyList);
+        adapter = new CompanyListAdapter(dynamicList);
         recyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
 
-    private String[][] companyList = {
+    final private String[][] companyList = {
         {"Bee Engineering","Energie et Energies Renouvelables"},
         {"ALTEN","Audit et Conseil"},
         {"Ateliers Louis Vuitton","Industrie"},
