@@ -1,13 +1,14 @@
 package com.ecn.guidefa;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import java.io.*;
-
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -17,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     MapFragment mapFragment = new MapFragment();
     CvFragment cvFragment = new CvFragment();
     NotesFragment notesFragment = new NotesFragment();
-    CompanyDetailsFragment detailsFragment = new CompanyDetailsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,25 +31,27 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.addToBackStack(item.toString());
         switch (item.getItemId()) {
             case R.id.companies:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, companyListFragment).commit();
+                ft.replace(R.id.container, companyListFragment).commit();
                 return true;
             case R.id.map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, mapFragment).commit();
+                ft.replace(R.id.container, mapFragment).commit();
                 return true;
             case R.id.notes:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, notesFragment).commit();
+                ft.replace(R.id.container, notesFragment).commit();
                 return true;
             case R.id.cv:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, cvFragment).commit();
+                ft.replace(R.id.container, cvFragment).commit();
                 return true;
         }
         return false;
     }
 
-    public boolean goBackEntreprise(View v){
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, companyListFragment).commit();
+    public boolean goBackOnClick(View v){
+        super.onBackPressed();
         return true;
     }
 

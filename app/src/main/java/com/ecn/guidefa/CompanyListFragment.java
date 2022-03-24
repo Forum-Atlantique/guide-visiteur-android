@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,14 +16,9 @@ import androidx.fragment.app.Fragment;
  */
 public class CompanyListFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
 
     public CompanyListFragment() {
@@ -34,16 +29,11 @@ public class CompanyListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment CompanyListFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static CompanyListFragment newInstance(String param1, String param2) {
+    public static CompanyListFragment newInstance() {
         CompanyListFragment fragment = new CompanyListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +42,7 @@ public class CompanyListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // place args
         }
     }
 
@@ -64,38 +53,25 @@ public class CompanyListFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_company_list, container, false);
 
         View rootView = inflater.inflate(R.layout.fragment_company_list, container, false);
-        RelativeLayout myLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
-        showCompanies(myLayout);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.company_list_view);
+        // use this setting to
+        // improve performance if you know that changes
+        // in content do not change the layout size
+        // of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+        // use a grid layout manager
+        layoutManager = new GridLayoutManager(rootView.getContext(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+        // retrieve data
+        adapter = new CompanyListAdapter(companyList);
+        recyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
-    private void showCompanies(RelativeLayout linearLayout) {
-        for(int i=0; i < companyList.length; i++) {
-            String company_name = companyList[i][0];
-
-            Button button = new Button(getContext());
-            button.setText(company_name);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CompanyDetailsFragment detailsFragment = new CompanyDetailsFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.container, detailsFragment).commit();
-                }
-            });
-
-            RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            buttonParams.addRule(RelativeLayout.CENTER_VERTICAL);
-
-            linearLayout.addView(button, buttonParams);
-        }
-    }
 
     private String[][] companyList = {
-        {"Groupe","Rubrique"},
         {"Bee Engineering","Energie et Energies Renouvelables"},
         {"ALTEN","Audit et Conseil"},
         {"Ateliers Louis Vuitton","Industrie"},
