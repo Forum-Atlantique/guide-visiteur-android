@@ -48,14 +48,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return false;
     }
 
-    public boolean goToDetails(View v){
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, detailsFragment).commit();
-        return true;
-    }
-
     public boolean goBackEntreprise(View v){
         getSupportFragmentManager().beginTransaction().replace(R.id.container, companyListFragment).commit();
         return true;
     }
+
+
 
 }
